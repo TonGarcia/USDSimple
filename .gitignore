@@ -104,6 +104,5 @@ dist
 .tern-port
 
 # Solidity Remix Files
-contracts/.deps/artifacts
-./contracts/artifacts
-./contracts/.deps
+contracts/artifacts
+contracts/.deps
