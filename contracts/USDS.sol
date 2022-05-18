@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: none
 // "Mint Dollar","USDM",100000
-pragma solidity ^0.8.12;
+pragma solidity ^0.8.14;
 
 //import "hardhat/console.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.0.0/contracts/token/ERC20/ERC20.sol";
@@ -12,13 +12,23 @@ contract USDSimple is ERC20 {
     uint private _minMintableStablecoin = 1000; // US$ 10.00
     address private _adminAddress;
 
+    /**
+     * @dev Throws if the sender is not the contract admin
+    */
     modifier admin {
         require(msg.sender == _adminAddress, "Only the admin can do that");
         _;
     }
 
-    // Constructor on deploy contract: "Simple Dollar","USDS",100000
+    /**
+     * @notice Returns the stream with all its properties
+     * @dev Throws if any param is missing
+     * @param name is the token name
+     * @param symbol is the symbol that represents the token
+     * @param _initialSupply is initial amount to be minted
+     */
     constructor(string memory name, string memory symbol, uint _initialSupply) ERC20(name, symbol) {
+        // Constructor on deploy contract: "Simple Dollar","USDS",100000
         // Mint 100 tokens to msg.sender = 100 * 10**uint(decimals())
         // Mint 100.000.000 tokens to msg.sender = 100000000 * 10**uint(decimals())
         // Similar to how
@@ -30,7 +40,7 @@ contract USDSimple is ERC20 {
         _mint(msg.sender, _initialSupply * 10**uint(decimals()));
     }
 
-    // Override the decimals to 2 decimals to look like stable coin
+    // Override the decimals to 2 decimals to look like a stable coin
     function decimals() public view virtual override returns (uint8) {
         return _decimal;
     }
@@ -40,10 +50,14 @@ contract USDSimple is ERC20 {
         return _minMintableStablecoin;
     }
 
-    // Enables external mintage
+    /**
+     * @notice Amount might be a dollar unit like 1 means 100 which means US$ 1.00
+     * @dev Throws if the amount is not the minimum
+     * @param amount is the amount to be minted
+     */
     function mint(uint amount) external payable admin {
         require(amount >= _minMintableStablecoin, "Need to mint at leat the minimum");
-        _mint(adminAddress, amount * 10**uint(decimals()));
+        _mint(_adminAddress, amount * 10**uint(decimals()));
     }
 
 }
