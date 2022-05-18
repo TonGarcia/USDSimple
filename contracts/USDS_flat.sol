@@ -467,9 +467,10 @@ contract USDSimple is ERC20 {
      * @dev Throws if the amount is not the minimum
      * @param amount is the amount to be minted
      */
-    function mint(uint amount) external payable admin {
+    function mint(uint amount) external admin {
         require(amount >= _minMintableStablecoin, "Need to mint at leat the minimum");
-        _mint(_adminAddress, amount * 10**uint(decimals()));
+        // _mint(_adminAddress, amount * 10**uint(decimals()));
+        _mint(_adminAddress, amount);
     }
 
 }
