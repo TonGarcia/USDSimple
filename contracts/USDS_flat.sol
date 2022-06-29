@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: none
-// "Simple Dollar","USDS",100000000000
+// "USDS Simple Dollar","USDS",100000
 pragma solidity ^0.8.0;
 
 /*
@@ -411,7 +411,7 @@ contract ERC20 is Context, IERC20 {
 // File: USDS.sol
 
 
-// "Simple Dollar","USDS",10000000
+// "Mint Dollar","USDS",100000
 pragma solidity ^0.8.13;
 
 //import "hardhat/console.sol";
@@ -420,15 +420,15 @@ pragma solidity ^0.8.13;
 
 contract USDSimple is ERC20 {
 
-    uint8 private _decimal = 6; // cents decimals
-    uint private _minMintableStablecoin = 10000000; // US$ 10.00 , 10100000 means US$ 10.10
+    uint8 private _decimal = 2; // cents decimals
+    uint private _minMintableStablecoin = 1000; // US$ 10.00
     address private _adminAddress;
 
     /**
      * @dev Throws if the sender is not the contract admin
     */
     modifier admin {
-        require(msg.sender == _adminAddress, "Only the admin can do it");
+        require(msg.sender == _adminAddress, "Only the admin can do that");
         _;
     }
 
@@ -440,7 +440,7 @@ contract USDSimple is ERC20 {
      * @param _initialSupply is initial amount to be minted
      */
     constructor(string memory name, string memory symbol, uint _initialSupply) ERC20(name, symbol) {
-        // Constructor on deploy contract: "Simple Dollar","USDS",10000000
+        // Constructor on deploy contract: "Simple Dollar","USDS",100000
         // Mint 100 tokens to msg.sender = 100 * 10**uint(decimals())
         // Mint 100.000.000 tokens to msg.sender = 100000000 * 10**uint(decimals())
         // Similar to how
@@ -463,7 +463,7 @@ contract USDSimple is ERC20 {
     }
 
     /**
-     * @notice Amount might be a dollar unit like 1 means 1000000 which means US$ 1.00
+     * @notice Amount might be a dollar unit like 1 means 100 which means US$ 1.00
      * @dev Throws if the amount is not the minimum
      * @param amount is the amount to be minted
      */
@@ -471,6 +471,17 @@ contract USDSimple is ERC20 {
         require(amount >= _minMintableStablecoin, "Need to mint at leat the minimum");
         // _mint(_adminAddress, amount * 10**uint(decimals()));
         _mint(_adminAddress, amount);
+    }
+
+    /**
+     * @notice called by predicate contract to mint tokens while withdrawing
+     * @dev Should be callable only by MintableERC20Predicate
+     * Make sure minting is done only by this function
+     * @param user user address for whom token is being minted
+     * @param amount amount of token being minted
+     */
+    function mint(address user, uint256 amount) external {
+        _mint(user, amount);
     }
 
 }
