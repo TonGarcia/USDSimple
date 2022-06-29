@@ -420,7 +420,7 @@ pragma solidity ^0.8.13;
 
 contract USDSimple is ERC20 {
 
-    uint8 private _decimal = 2; // cents decimals
+    uint8 private _decimal = 6; // cents decimals
     uint private _minMintableStablecoin = 1000; // US$ 10.00
     address private _adminAddress;
 
