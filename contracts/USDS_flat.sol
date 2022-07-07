@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: none
-// "USDS Simple Dollar","USDS",100000
+// "Simple Dollar","USDS",100000000000
 pragma solidity ^0.8.0;
 
 /*
